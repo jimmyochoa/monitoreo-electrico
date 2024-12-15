@@ -24,9 +24,13 @@ def generate_consumption_data(meter_id):
     # Crear un timestamp actual
     timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
     
-    # Simular un consumo eléctrico
-    consumption = round(random.uniform(0.1, 5.0), 2)  # Consumo en kWh
-    
+    # Simular un consumo eléctrico con valores variados
+    consumption = round(random.uniform(2.0, 10.0), 2)  # Rango ajustado para que los consumos estén siempre por encima de 1.0  # Asegúrate de que el consumo sea más alto para evitar que se filtre
+
+    # Aumentar la probabilidad de picos para pruebas
+    if random.random() > 0.8:  # 20% de probabilidad de generar un consumo de pico
+        consumption = round(random.uniform(5.0, 8.0), 2)  # Picos de consumo mayores
+
     # Crear el mensaje con la información simulada
     message = {
         "timestamp": timestamp,
@@ -46,8 +50,8 @@ def send_to_kafka():
         # Generar un mensaje simulado
         message = generate_consumption_data(meter_id)
         
-        # Enviar el mensaje a Kafka (al tópico correspondiente)
-        producer.send('consumo_electrico', value=message)  # 'message' se convierte a bytes automáticamente
+        # Enviar el mensaje al tema correspondiente dependiendo de la ciudad
+        producer.send(f'consumo_{message["city"].lower()}', value=message)  # 'message' se convierte a bytes automáticamente
         producer.flush()  # Asegúrate de que los mensajes sean enviados
         
         print(f"Mensaje enviado: {message}")  # Imprimir para ver lo que se está enviando

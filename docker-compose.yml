@@ -86,7 +86,9 @@ services:
 
   # Producer (simulador de datos)
   producer:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.producer  # Especificar el Dockerfile del productor
     container_name: producer
     depends_on:
       - kafka
@@ -95,7 +97,9 @@ services:
 
   # Spark Job
   spark-job:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.spark-job  # Especificar el Dockerfile del Spark job
     container_name: spark-job
     depends_on:
       - kafka
