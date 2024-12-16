@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, window, avg, from_json, to_timestamp, date_format
+from pyspark.sql.functions import col, window, avg, from_json, to_timestamp, date_format, when
 from pyspark.sql.types import StructType, StructField, StringType, FloatType
 
 try:
@@ -65,17 +65,22 @@ try:
 
     # Detectar picos de consumo (valores atípicos) – Definimos un umbral arbitrario
     threshold = 0.1  # Umbral reducido para ver resultados
-    df_picos = df_windowed.filter(df_windowed.avg_consumption > threshold)
+
+    # Crear la columna 'is_peak' basada en el umbral
+    df_windowed = df_windowed.withColumn(
+        "is_peak", 
+        when(col("avg_consumption") > threshold, True).otherwise(False)
+    )
 
     print(f"Detecting consumption spikes above {threshold}...")
 
     # Formatear los resultados en una sola columna para exportar como texto
-    df_formatted = df_picos.selectExpr(
-        "concat(start, ', ', city, ', ', cast(avg_consumption as string)) as value"
+    df_formatted = df_windowed.selectExpr(
+        "concat(start, ', ', city, ', ', cast(avg_consumption as string), ', ', cast(is_peak as string)) as value"
     )
 
-    # Escribir los resultados en HDFS como archivo de texto
-    query = df_formatted.writeStream \
+    # Escribir los resultados en HDFS como archivo de texto único
+    query = df_formatted.coalesce(1).writeStream \
         .outputMode("append") \
         .format("text") \
         .option("path", "hdfs://hadoop-namenode:9000/user/spark/output") \
