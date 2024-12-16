@@ -83,18 +83,30 @@ try:
         "concat(start, ', ', city, ', ', cast(avg_consumption as string), ', ', cast(avg_lat as string), ', ', cast(avg_lon as string)) as value"
     )
 
+    # Función para enviar datos al WebSocket
     async def process_row_and_send(batch_df, epoch_id):
         rows = batch_df.collect()
         for row in rows:
             message = row["value"]
             await send_to_websocket("ws://websocket-server:6789", message)
 
+    # Escribir en HDFS y enviar a WebSocket
+    def write_to_hdfs(batch_df, epoch_id):
+        # Escribir en HDFS
+        batch_df.write \
+            .format("parquet") \
+            .mode("append") \
+            .save("hdfs://hadoop-namenode:9000/user/spark/output")
+
+        # Enviar al WebSocket
+        asyncio.run(process_row_and_send(batch_df, epoch_id))
+
     query = df_formatted.writeStream \
         .outputMode("update") \
-        .foreachBatch(lambda batch_df, epoch_id: asyncio.run(process_row_and_send(batch_df, epoch_id))) \
+        .foreachBatch(write_to_hdfs) \
         .start()
 
-    print("Sending results to WebSocket...")
+    print("Sending results to WebSocket and writing to HDFS...")
 
     # Esperar hasta que termine el procesamiento
     query.awaitTermination()

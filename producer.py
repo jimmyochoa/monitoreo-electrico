@@ -12,20 +12,24 @@ producer = KafkaProducer(
 
 # Función para generar datos simulados de consumo
 def generate_consumption_data(meter_id):
-    # Definir coordenadas de Samborondon y Daule
+    # Definir coordenadas de Samborondon y Daule con sus rangos
     locations = [
-        {"city": "Samborondon", "lat": -2.205, "lon": -79.948},
-        {"city": "Daule", "lat": -2.287, "lon": -79.679}
+        {"city": "Samborondon", "lat_min": -1.96071, "lat_max": -1.96032, "lon_min": -79.72566, "lon_max": -79.72534},
+        {"city": "Daule", "lat_min": -1.86032, "lat_max": -1.86010, "lon_min": -79.97683, "lon_max": -79.97660}
     ]
     
     # Elegir una ciudad aleatoria
     location = random.choice(locations)
     
+    # Generar coordenadas aleatorias dentro del rango de latitud y longitud de la ciudad elegida
+    lat = round(random.uniform(location["lat_min"], location["lat_max"]), 5)
+    lon = round(random.uniform(location["lon_min"], location["lon_max"]), 5)
+    
     # Crear un timestamp actual
     timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
     
     # Simular un consumo eléctrico con valores variados
-    consumption = round(random.uniform(2.0, 10.0), 2)  # Rango ajustado para que los consumos estén siempre por encima de 1.0  # Asegúrate de que el consumo sea más alto para evitar que se filtre
+    consumption = round(random.uniform(1.5, 5.0), 2)  # Asegúrate de que el consumo sea más alto para evitar que se filtre
 
     # Aumentar la probabilidad de picos para pruebas
     if random.random() > 0.8:  # 20% de probabilidad de generar un consumo de pico
@@ -36,7 +40,7 @@ def generate_consumption_data(meter_id):
         "timestamp": timestamp,
         "consumption_kWh": consumption,
         "meter_id": meter_id,
-        "location": location,
+        "location": {"lat": lat, "lon": lon},
         "city": location["city"]
     }
     
