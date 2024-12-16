@@ -46,7 +46,8 @@ docker-compose ps
 ```bash
 cd dashboard/dashboard_vite
 npm install
-npm run dev
+npx vite
+
 ```
 6. Acceder a la interfaz web
 ```
