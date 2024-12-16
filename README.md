@@ -5,8 +5,8 @@ Sistema de Monitoreo de Consumo Eléctrico en Tiempo Real
 Este proyecto tiene como objetivo desarrollar un sistema de monitoreo de consumo eléctrico en tiempo real, el cual permita visualizar el consumo de energía eléctrica de un hogar o empresa en tiempo real, a través de una interfaz web.
 
 ## Integrantes
-- [Jimmy Ochoa](
-- [Jose Balda](
+- Jimmy Ochoa
+- Jose Balda
 
 ## Tecnologías
 - [Hadoop](https://hadoop.apache.org/)
