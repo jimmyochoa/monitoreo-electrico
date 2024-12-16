@@ -16,6 +16,12 @@ Este proyecto tiene como objetivo desarrollar un sistema de monitoreo de consumo
 - [Spark](https://spark.apache.org/)
 - [Python](https://www.python.org/)
 
+## Requisitos
+- Docker
+- Docker Compose
+- Node.js
+- NPM
+
 ## Instalación
 1. Clonar el repositorio
 ```bash
@@ -30,4 +36,19 @@ cd monitoreo-electrico
 3. Iniciar los servicios
 ```bash
 docker-compose up
+```
+
+4. Verificar que los servicios estén corriendo
+```bash
+docker-compose ps
+```
+5. Iniciar el frontend
+```bash
+cd dashboard/dashboard_vite
+npm install
+npm run dev
+```
+6. Acceder a la interfaz web
+```
+http://localhost:5173/
 ```
