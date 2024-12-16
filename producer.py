@@ -25,7 +25,7 @@ def generate_consumption_data(meter_id):
     timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
     
     # Simular un consumo eléctrico con valores variados
-    consumption = round(random.uniform(1.5, 5.0), 2)  # Asegúrate de que el consumo sea más alto para evitar que se filtre
+    consumption = round(random.uniform(2.0, 10.0), 2)  # Rango ajustado para que los consumos estén siempre por encima de 1.0  # Asegúrate de que el consumo sea más alto para evitar que se filtre
 
     # Aumentar la probabilidad de picos para pruebas
     if random.random() > 0.8:  # 20% de probabilidad de generar un consumo de pico

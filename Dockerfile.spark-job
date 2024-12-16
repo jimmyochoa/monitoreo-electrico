@@ -20,6 +20,8 @@ COPY requirements.txt /app/requirements.txt
 
 # Instalar las dependencias desde requirements.txt
 RUN pip3 install -r requirements.txt
+RUN pip3 install websocket-client
+RUN pip3 install websockets
 
 # Copiar el archivo spark-job.py
 COPY spark-job.py /app/spark-job.py

@@ -12,7 +12,16 @@ services:
       - "2181:2181"
     networks:
       - kafka-network
-
+  # WebSocket Server
+  websocket-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.websocket  # Dockerfile para el servidor WebSocket
+    container_name: websocket-server
+    ports:
+      - "6789:6789"  # Puerto del WebSocket
+    networks:
+      - kafka-network
   # Kafka Broker
   kafka:
     image: wurstmeister/kafka:latest

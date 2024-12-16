@@ -1,0 +1,15 @@
+FROM python:3.9-slim
+
+# Instalar dependencias necesarias
+RUN pip install websockets
+RUN pip install asyncio
+RUN pip install websocket-client
+
+# Copiar el script del servidor WebSocket
+COPY websocket_server.py /app/websocket_server.py
+
+# Establecer el directorio de trabajo
+WORKDIR /app
+
+# Comando para iniciar el servidor
+CMD ["python", "websocket_server.py"]
